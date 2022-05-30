@@ -1,2 +1,11 @@
 # netty
-netty学习，应用demo->tcp粘包拆包->高级应用(实现tomcat ，rpc，dubbo等)->netty源码解析
+1、简单使用demo
+
+2、TCP的粘包和拆包
+
+3、netty的高级应用 （包括使用netty实现tomcat、rpc、dubbo等）
+
+4、netty 整合springboot
+
+5、netty源码分析
+
