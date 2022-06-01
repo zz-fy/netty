@@ -1,4 +1,4 @@
-package cn.zfy.netty;
+package cn.zfy.netty.server;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
@@ -24,6 +24,7 @@ public class ChatSocketServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         final Channel channel = ctx.channel();
+        System.out.println(channel.remoteAddress() + "发言:" + msg + "\n");
         group.forEach(ch -> {
             if (channel != ch) {
                 ch.writeAndFlush(channel.remoteAddress() + ":" + msg + "\n");
@@ -56,7 +57,10 @@ public class ChatSocketServerHandler extends ChannelInboundHandlerAdapter {
      */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        super.channelInactive(ctx);
+        Channel channel = ctx.channel();
+        SocketAddress address = channel.remoteAddress();
+        System.out.println(address + "--下线");
+        group.writeAndFlush(address + "下线,在线人数: " + group.size() + "\n");
     }
 
     @Override
