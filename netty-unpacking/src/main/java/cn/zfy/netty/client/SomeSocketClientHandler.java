@@ -3,9 +3,6 @@ package cn.zfy.netty.client;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-
 
 /**
  * @Classname SomeSocketClientHandler
@@ -14,6 +11,8 @@ import java.util.concurrent.TimeUnit;
  * @Created by zfy
  */
 public class SomeSocketClientHandler extends ChannelInboundHandlerAdapter {
+
+    String lineSeparator = System.getProperty("line.separator");
 
     String message = "Netty is a NIO client server framework " +
             "which enables quick and easy development of network applications " +
@@ -46,6 +45,7 @@ public class SomeSocketClientHandler extends ChannelInboundHandlerAdapter {
             "a way to achieve of development, performance, stability, without " +
             "which enables quick and easy development of network applications " +
             "such as protocol servers and clients. It greatly simplifies and " +
+            "zfy777" +
             "streamlines network programming such as TCP and UDP socket server." +
             "'Quick and easy' doesn't mean that a resulting application will " +
             "suffer from a maintainability or a performance issue. Netty has " +

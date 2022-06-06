@@ -1,6 +1,7 @@
 package cn.zfy.netty.server;
 
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -8,6 +9,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.CharsetUtil;
 
@@ -29,7 +32,10 @@ public class SomeSocketServer {
                     @Override
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline pipeline = socketChannel.pipeline();
-                        pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8))
+                        pipeline
+                                //.addLast(new LineBasedFrameDecoder(5120))//行分隔符
+                                //.addLast(new DelimiterBasedFrameDecoder(5120, Unpooled.copiedBuffer("zfy777".getBytes()))) //固定分割符
+                                .addLast(new StringDecoder(CharsetUtil.UTF_8))
                                 .addLast(new SomeSocketServerHandler());
                     }
                 });
