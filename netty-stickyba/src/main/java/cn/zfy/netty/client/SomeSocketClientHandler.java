@@ -17,7 +17,7 @@ public class SomeSocketClientHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
         for (int i = 0; i < 100; i++) {
-            ctx.writeAndFlush("hello world" + i + " ");
+            ctx.writeAndFlush("hello world");
         }
 
     }
