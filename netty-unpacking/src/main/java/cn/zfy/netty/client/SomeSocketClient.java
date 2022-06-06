@@ -40,6 +40,8 @@ public class SomeSocketClient {
             ChannelFuture future = bootstrap.connect("localhost", 8090).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
             if (!Objects.isNull(eventLoopGroup)) {
                 eventLoopGroup.shutdownGracefully();
             }

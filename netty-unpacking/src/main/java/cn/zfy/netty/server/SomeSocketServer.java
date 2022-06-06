@@ -37,6 +37,8 @@ public class SomeSocketServer {
             ChannelFuture future = serverBootstrap.bind(8090).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
             parentEventLoopGroup.shutdownGracefully();
             childEventLoopGroup.shutdownGracefully();
         }
