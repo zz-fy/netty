@@ -21,7 +21,7 @@ import io.netty.util.CharsetUtil;
  */
 public class WebSocketServer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         EventLoopGroup parentEventLoopGroup = new NioEventLoopGroup();
         EventLoopGroup childEventLoopGroup = new NioEventLoopGroup();
         ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -39,7 +39,7 @@ public class WebSocketServer {
         try {
             ChannelFuture future = serverBootstrap.bind(8093).sync();
             future.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
+        } finally {
             parentEventLoopGroup.shutdownGracefully();
             childEventLoopGroup.shutdownGracefully();
         }

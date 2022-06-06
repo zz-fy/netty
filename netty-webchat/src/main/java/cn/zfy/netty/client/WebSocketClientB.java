@@ -48,11 +48,10 @@ public class WebSocketClientB {
             while (true) {
                 channel.writeAndFlush(bufferedReader.readLine() + "\r\n");
             }
-
-        } catch (InterruptedException | UnsupportedEncodingException e) {
-            if (!Objects.isNull(eventLoopGroup)) eventLoopGroup.shutdownGracefully();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if (!Objects.isNull(eventLoopGroup)) eventLoopGroup.shutdownGracefully();
         }
     }
 
