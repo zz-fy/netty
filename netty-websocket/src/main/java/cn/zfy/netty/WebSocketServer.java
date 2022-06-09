@@ -22,7 +22,7 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 public class WebSocketServer {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         EventLoopGroup parentEventLoopGroup = new NioEventLoopGroup();
         EventLoopGroup childEventLoopGroup = new NioEventLoopGroup();
         ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -32,8 +32,11 @@ public class WebSocketServer {
                     protected void initChannel(SocketChannel socketChannel) throws Exception {
                         ChannelPipeline pipeline = socketChannel.pipeline();
                         pipeline.addLast(new HttpServerCodec())
+                                //大块数据处理器
                                 .addLast(new ChunkedWriteHandler())
+                                // chunked 聚合处理器
                                 .addLast(new HttpObjectAggregator(4096))
+                                //webSocket协议转换处理器
                                 .addLast(new WebSocketServerProtocolHandler("/some"))
                                 .addLast(new TextWebSocketServerHandler());
                     }
@@ -41,7 +44,7 @@ public class WebSocketServer {
         try {
             ChannelFuture future = serverBootstrap.bind(8092).sync();
             future.channel().closeFuture().sync();
-        } catch (InterruptedException e) {
+        } finally {
             parentEventLoopGroup.shutdownGracefully();
             childEventLoopGroup.shutdownGracefully();
         }
