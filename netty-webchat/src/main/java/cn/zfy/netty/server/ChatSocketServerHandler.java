@@ -19,6 +19,8 @@ import java.net.SocketAddress;
  */
 public class ChatSocketServerHandler extends ChannelInboundHandlerAdapter {
 
+    //是一个线程安全的集合，其中存放着与当前服务器相连接的所有Active状态的Channel
+    //GlobalEventExecutor是一个单例、单线程的EventExecutor，是为了保证对当前group中所有channel的处理
     private static ChannelGroup group = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     @Override
