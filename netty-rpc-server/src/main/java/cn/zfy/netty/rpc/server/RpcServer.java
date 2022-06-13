@@ -1,4 +1,4 @@
-package cn.zfy.netty.server;
+package cn.zfy.netty.rpc.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -50,7 +50,7 @@ public class RpcServer {
         try {
             ChannelFuture channelFuture = serverBootstrap.bind(8888).sync();
             System.out.println("微服务已注册成功，端口号8888");
-            ChannelFuture sync = channelFuture.channel().closeFuture().sync();
+            channelFuture.channel().closeFuture().sync();
         } finally {
             parentEventLoopGroup.shutdownGracefully();
             childEventLoopGroup.shutdownGracefully();

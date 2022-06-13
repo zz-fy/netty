@@ -1,4 +1,4 @@
-package cn.zfy.netty.server.service;
+package cn.zfy.netty.rpc.server.service;
 
 import cn.zfy.netty.rpc.api.service.SomeService;
 

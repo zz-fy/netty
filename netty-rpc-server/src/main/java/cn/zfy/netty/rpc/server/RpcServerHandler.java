@@ -1,4 +1,4 @@
-package cn.zfy.netty.server;
+package cn.zfy.netty.rpc.server;
 
 import cn.zfy.netty.rpc.api.dto.InvokeMessage;
 import io.netty.channel.ChannelHandlerContext;

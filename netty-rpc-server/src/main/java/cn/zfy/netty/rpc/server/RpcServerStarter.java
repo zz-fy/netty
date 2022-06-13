@@ -1,4 +1,4 @@
-package cn.zfy.netty.server;
+package cn.zfy.netty.rpc.server;
 
 /**
  * @Classname RpcServerStarter
@@ -9,6 +9,6 @@ package cn.zfy.netty.server;
 public class RpcServerStarter {
 
     public static void main(String[] args) throws Exception {
-        new RpcServer().publish("cn.zfy.netty.rpc.api.service");
+        new RpcServer().publish("cn.zfy.netty.rpc.server.service");
     }
 }
