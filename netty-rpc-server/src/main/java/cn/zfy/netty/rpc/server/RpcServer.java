@@ -11,10 +11,8 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Classname RpcServer
@@ -24,10 +22,18 @@ import java.util.Map;
  */
 public class RpcServer {
 
-    private Map<String, Object> registryMap = new HashMap<>();
+    // 定义服务注册表
+    private Map<String, Object> registryMap = new ConcurrentHashMap<>();
 
-    private List<String> classCache = new ArrayList<>();
+    //缓存指定包中所有提供者的类名
+    private List<String> classCache = Collections.synchronizedList(new ArrayList<>());
 
+    /**
+     * 将指定包中的所有提供者写入服务注册表
+     *
+     * @param providerPackage
+     * @throws Exception
+     */
     public void publish(String providerPackage) throws Exception {
         getProviderClass(providerPackage);
         doRegister();
@@ -35,8 +41,11 @@ public class RpcServer {
         EventLoopGroup childEventLoopGroup = new NioEventLoopGroup();
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(parentEventLoopGroup, childEventLoopGroup)
+                //用于指定当服务端请求处理线程全部用完时，临时存放已经完成了三次握手的请求的队列的长度
                 .option(ChannelOption.SO_BACKLOG, 1024)
+                //指定是否启用心跳机制来维护C/S间的长连接
                 .childOption(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
+                //指定要创建的Channel类型
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
@@ -59,17 +68,21 @@ public class RpcServer {
     }
 
 
+    //将指定包中所有class文件的类名写入到classCache中
     private void getProviderClass(String providerPackage) {
+        // cn.zfy.netty.rpc.server.service ---> cn/zfy/netty/rpc/server/service
         URL resource = this.getClass().getClassLoader().getResource(providerPackage.replaceAll("\\.", "/"));
+        if (Objects.isNull(resource)) return;
         File dir = new File(resource.getFile());
         for (File file : dir.listFiles()) {
             if (file.isDirectory()) {
-                getProviderClass(providerPackage.concat(".").concat(file.getName()));
+                getProviderClass(getFullyQualifiedName(providerPackage, file.getName()));
                 continue;
             }
             if (file.getName().endsWith(".class")) {
+                //获取的是全限定名
                 String fileName = file.getName().replace(".class", "").trim();
-                classCache.add(providerPackage.concat(".").concat(fileName));
+                classCache.add(getFullyQualifiedName(providerPackage, fileName));
             }
         }
     }
@@ -81,6 +94,11 @@ public class RpcServer {
             String interfaceName = clazz.getInterfaces()[0].getName();
             registryMap.put(interfaceName, clazz.newInstance());
         }
+    }
+
+    //获取类的全限定名
+    private String getFullyQualifiedName(String basePackage, String fileName) {
+        return basePackage.concat(".").concat(fileName);
     }
 
 }
