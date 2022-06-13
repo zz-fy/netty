@@ -13,7 +13,6 @@ import io.netty.handler.codec.serialization.ObjectEncoder;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.Objects;
 
 /**
  * @Classname RpcProxy
@@ -22,6 +21,10 @@ import java.util.Objects;
  * @Created by zfy
  */
 public class RpcProxy {
+
+    private RpcProxy() {
+
+    }
 
 
     public static <T> T create(Class<?> clazz) {
@@ -63,9 +66,7 @@ public class RpcProxy {
             channelFuture.channel().writeAndFlush(message).sync();
             channelFuture.channel().closeFuture().sync();
         } finally {
-            if (!Objects.isNull(eventLoopGroup)) {
-                eventLoopGroup.shutdownGracefully();
-            }
+            eventLoopGroup.shutdownGracefully();
         }
         return handler.getResult();
     }
