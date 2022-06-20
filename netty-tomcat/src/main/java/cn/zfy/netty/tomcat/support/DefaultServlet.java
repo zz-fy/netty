@@ -14,7 +14,7 @@ public class DefaultServlet implements Servlet {
     @Override
     public void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception {
         String servletName = httpServletRequest.getUri().split("/")[1];
-        String content = "404 - no this servlet".concat(servletName);
+        String content = "404 - no this servlet ".concat(servletName);
         httpServletResponse.write(content);
     }
 
